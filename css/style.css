@@ -1,0 +1,103 @@
+/* Reset default margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    background-color: #000;
+    color: #fff;
+}
+
+/* Interactive background styling */
+#interactive-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+/* Canvas element created by Three.js */
+canvas {
+    display: block;
+}
+
+/* Pyramid container styling */
+.pyramid {
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out;
+}
+
+/* Pyramid face styling */
+.pyramid-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: visible;
+    transition: all 0.15s ease-out;
+}
+
+/* North face */
+.face-north {
+    transform-origin: bottom;
+    transform: rotateX(45deg) translateZ(0);
+    background: linear-gradient(to bottom, #555, #333);
+}
+
+/* East face */
+.face-east {
+    transform-origin: left;
+    transform: rotateY(90deg) rotateX(45deg) translateZ(0);
+    background: linear-gradient(to bottom, #444, #222);
+}
+
+/* South face */
+.face-south {
+    transform-origin: top;
+    transform: rotateX(-45deg) translateZ(0);
+    background: linear-gradient(to top, #333, #111);
+}
+
+/* West face */
+.face-west {
+    transform-origin: right;
+    transform: rotateY(-90deg) rotateX(45deg) translateZ(0);
+    background: linear-gradient(to bottom, #222, #000);
+}
+
+/* Pyramid base */
+.face-bottom {
+    transform: rotateX(90deg) translateZ(0);
+    background-color: #444;
+}
+
+/* Main content styling */
+.content {
+    position: relative;
+    padding: 2rem;
+    text-align: center;
+    z-index: 1;
+    margin-top: 20vh;
+    pointer-events: none; /* Allow clicking through to the 3D scene */
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Wave Studio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            z-index: 2;
+            pointer-events: none; /* Allow clicking through to the 3D scene */
+        }
+
+        .gallery-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            transition: transform 0.3s ease, font-size 0.3s ease;
+            z-index: 2;
+            cursor: pointer;
+            pointer-events: auto; /* Make this clickable */
+        }
+
+        .gallery-text:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="interactive-background"></div>
+    
+    <header class="header">
+        <h1>Space Wave Studio</h1>
+    </header>
+    
+    <div class="gallery-text">
+        Gallery
+    </div>
+
+    <!-- Using ES modules as per the modern Three.js approach -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    
+    <script type="module" src="js/script.js"></script>
+</body>
+</html>
