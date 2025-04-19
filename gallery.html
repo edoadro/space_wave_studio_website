@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Wave Studio - Gallery</title>
+    <!-- Adding Adobe Fonts for Axiforma -->
+    <link rel="stylesheet" href="https://use.typekit.net/your-project-id.css">
+    <!-- Adding Google Fonts alternatives (similar to Axiforma) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Axiforma', 'Montserrat', 'Nunito', sans-serif;
+            font-weight: 300;
+        }
+
+        .gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            margin: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .artwork-box {
+            width: 250px;
+            height: 250px;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .artwork-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .sold-label {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            color: #fff;
+            padding: 0.3rem 0;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Axiforma', 'Montserrat', 'Nunito', sans-serif;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 768px) {
+            .artwork-box {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .gallery-item {
+                margin: 1rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .artwork-box {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .gallery-item {
+                margin: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='index.html'">Back</button>
+
+    <h1 style="text-align: center; margin-top: 50px; padding: 20px;">Gallery</h1>
+    
+    <div class="gallery-container">
+        <!-- Gallery items - 15 boxes -->
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <!-- Placeholder for artwork image -->
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 1">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 2">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 3">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 4">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 5">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 6">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 7">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 8">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 9">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 10">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 11">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 12">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 13">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 14">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+
+        <div class="gallery-item">
+            <div class="artwork-box">
+                <img src="https://via.placeholder.com/250x250" alt="Artwork 15">
+            </div>
+            <div class="sold-label">SOLD</div>
+        </div>
+    </div>
+</body>
+</html>

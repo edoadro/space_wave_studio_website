@@ -8,9 +8,11 @@ const config = {
     pyramidSize: 1.0,                 // Base size of pyramids
     pyramidHeight: 2.0,               // Height of pyramids
     tipMovementFactor: 0.5,           // How far the tip can move (as fraction of base size)
-    mouseInfluenceRadius: 40,          // How far the mouse influence reaches
+    mouseInfluenceRadius: 40,         // How far the mouse influence reaches
     modelColor: 0xcccccc,             // Base color of models
-    highlightColor: 0xffffff,         // Highlight color when mouse is near
+    maxStretchFactor: 1.6,            // Maximum factor by which pyramids can stretch (1.0 = no stretch)
+    minHeightFactor: 1.0,             // Minimum height factor (no compression)
+    stretchTransitionFactor: 0.7      // Controls the smoothness of the stretch transition (higher = more gradual)
 };
 
 // Variables
@@ -18,6 +20,105 @@ let scene, camera, renderer;
 let models = [];
 let mousePosition = new THREE.Vector2(0, 0);
 let raycaster = new THREE.Raycaster();
+// Add a variable to store fixed lights
+let lights = [];
+
+// Add a variable to store current base color
+let currentBaseColor = config.modelColor;
+
+// Pantone color palette (hex values)
+const pantoneColors = [
+    0xD94F70,  // Pantone 18-2043 - Raspberry Sorbet
+    0xFF6F61,  // Pantone 16-1546 - Living Coral (2019 Color of the Year)
+    0xFFBF00,  // Pantone 14-1064 - Marigold
+    0x7FBFB4,  // Pantone 14-5413 - Turquoise
+    0x88B04B,  // Pantone 15-0343 - Greenery (2017 Color of the Year)
+    0x5F4B8B,  // Pantone 18-3838 - Ultra Violet (2018 Color of the Year)
+    0x0F4C81,  // Pantone 19-4052 - Classic Blue (2020 Color of the Year)
+    0x939597,  // Pantone 17-5104 - Ultimate Gray (2021 Color of the Year)
+    0xF5DF4D,  // Pantone 13-0647 - Illuminating (2021 Color of the Year)
+    0x006B54,  // Pantone 18-5845 - Forest Biome
+    0x765285,  // Pantone 18-3224 - Very Peri (2022 Color of the Year)
+    0xDC793E,  // Pantone 18-1750 - Viva Magenta (2023 Color of the Year)
+    0x9CCEA9,  // Pantone 13-1023 - Peach Fuzz (2024 Color of the Year)
+    0xFADA5E,  // Pantone 12-0752 - Meadowlark
+    0xBC243C,  // Pantone 19-1662 - True Red
+    0x5A5B9F,  // Pantone 18-3949 - Blue Iris
+    0x6667AB,  // Pantone 16-4535 - Serenity
+    0xF7CAC9,  // Pantone 13-1520 - Rose Quartz
+    0xA2B2C8,  // Pantone 15-3920 - Serenity
+    0x91A8D0,  // Pantone 15-3919 - Serenity
+    0x9B1B30,  // Pantone 19-1764 - Crimson
+    0x5B5EA6,  // Pantone 18-3838 - Violet
+    0x00B5E2,  // Pantone 14-4811 - Blue Atoll
+    0x00B388,  // Pantone 15-5421 - Arcadia
+    0x009473,  // Pantone 17-5641 - Emerald
+    0x844C9C,  // Pantone 17-3628 - Purple
+    0xD65076,  // Pantone 17-2031 - Pink Yarrow
+    0xEFC050,  // Pantone 14-0846 - Primrose Yellow
+    0x98C1D9,  // Pantone 15-3717 - Placid Blue
+    0x9CD7D3   // Pantone 14-4620 - Island Paradise
+];
+
+// Function to get a random Pantone color from our palette
+function getRandomPantoneColor() {
+    // Get random index
+    const randomIndex = Math.floor(Math.random() * pantoneColors.length);
+    
+    // Return the color at that index
+    return pantoneColors[randomIndex];
+}
+
+// Function to change all pyramids to a new random color
+function changeColor() {
+    // Generate a new random color from the Pantone palette
+    currentBaseColor = getRandomPantoneColor();
+    
+    // Update config color
+    config.modelColor = currentBaseColor;
+    
+    // Update each pyramid's base color
+    models.forEach(pyramid => {
+        pyramid.userData.originalColor = currentBaseColor;
+    });
+}
+
+// Setup fixed lighting in the scene
+function setupLighting() {
+    // Add ambient light with increased intensity
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(ambientLight);
+    lights.push(ambientLight);
+    console.log('Added fixed ambient light');
+    
+    // Add fixed directional lights from multiple angles for better visibility
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight1.position.set(5, 10, 5);
+    directionalLight1.castShadow = true;
+    scene.add(directionalLight1);
+    lights.push(directionalLight1);
+    
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight2.position.set(-5, 8, -5);
+    directionalLight2.castShadow = true;
+    scene.add(directionalLight2);
+    lights.push(directionalLight2);
+    
+    // Add a third light from directly above for consistent illumination
+    const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.6);
+    directionalLight3.position.set(0, 15, 0);  // Directly above
+    directionalLight3.castShadow = true;
+    scene.add(directionalLight3);
+    lights.push(directionalLight3);
+    
+    // Add a fourth light from below for some interesting shadows
+    const directionalLight4 = new THREE.DirectionalLight(0xffffff, 0.3);
+    directionalLight4.position.set(0, -5, 0);  // Below
+    scene.add(directionalLight4);
+    lights.push(directionalLight4);
+    
+    console.log('Added fixed directional lights');
+}
 
 // Initialize the scene
 function init() {
@@ -26,30 +127,16 @@ function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x111111); // Dark gray background
     
-    // Add ambient light with increased intensity
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    scene.add(ambientLight);
-    console.log('Added ambient light');
-    
-    // Add directional lights from multiple angles for better visibility
-    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
-    directionalLight1.position.set(5, 10, 5);
-    scene.add(directionalLight1);
-    
-    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight2.position.set(-5, 8, -5);
-    scene.add(directionalLight2);
-    
-    const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.6);
-    directionalLight3.position.set(0, 10, -10);
-    scene.add(directionalLight3);
+    // Setup fixed lighting
+    setupLighting();
     
     // Add a visible ground plane for better orientation
     const groundGeometry = new THREE.PlaneGeometry(50, 50);
     const groundMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x333333, 
         roughness: 0.8, 
-        metalness: 0.2 
+        metalness: 0.2,
+        receiveShadow: true
     });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2; // Rotate to be horizontal
@@ -67,6 +154,8 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setClearColor(0x000000, 1); // Clear with black, fully opaque
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     
     // Add the renderer to the DOM
     const container = document.getElementById('interactive-background');
@@ -158,7 +247,9 @@ function createCustomPyramid(x, z) {
         color: config.modelColor,
         shininess: 30,
         specular: 0x444444,
-        flatShading: false
+        flatShading: false,
+        castShadow: true,
+        receiveShadow: true
     });
     
     // Create and return the mesh
@@ -170,7 +261,8 @@ function createCustomPyramid(x, z) {
         baseZ: z,
         tipIndex: 4,  // Index of the tip vertex (5th vertex)
         originalTipY: config.pyramidHeight,
-        originalColor: config.modelColor
+        originalColor: config.modelColor,
+        originalHeight: config.pyramidHeight  // Store the original height for stretching calculations
     };
     
     return pyramid;
@@ -181,8 +273,9 @@ function update() {
     // Cast a ray from the camera through the mouse position
     raycaster.setFromCamera(mousePosition, camera);
     
-    // Calculate a 3D point in the scene from mouse coordinates
-    const planeY = 0; // Y position of the plane to intersect with
+    // Calculate a 3D point in the scene from mouse coordinates directly
+    // No more artificial height projection
+    const planeY = 0; // Y position of the ground plane (no upward shift)
     const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -planeY);
     const targetPoint = new THREE.Vector3();
     raycaster.ray.intersectPlane(plane, targetPoint);
@@ -196,15 +289,21 @@ function update() {
         const baseX = pyramid.userData.baseX;
         const baseZ = pyramid.userData.baseZ;
         
-        // Calculate vector from base center to mouse target
+        // Calculate the vector from base to mouse position
         const vectorToTarget = new THREE.Vector2(
             targetPoint.x - baseX,
             targetPoint.z - baseZ
         );
         
-        // Calculate distance for intensity effect
+        // Calculate distance for influence effect
         const distance = vectorToTarget.length();
-        const influence = Math.max(0, 1 - (distance / config.mouseInfluenceRadius));
+        
+        // Create a more gradual influence falloff using a smoother curve
+        // This creates a more gradual transition between affected and unaffected pyramids
+        const smoothFactor = config.stretchTransitionFactor; // Controls curve steepness
+        const normalizedDistance = distance / config.mouseInfluenceRadius;
+        // Smooth falloff function
+        const influence = Math.max(0, 1 - Math.pow(normalizedDistance, smoothFactor));
         
         // Calculate tip offset based on mouse influence
         const maxOffset = config.pyramidSize * config.tipMovementFactor;
@@ -218,10 +317,24 @@ function update() {
             tipOffsetZ = vectorToTarget.y * maxOffset * influence;
         }
         
+        // Calculate stretch factor based on distance with a smoother transition
+        // We use the same smoothed influence to affect the stretching
+        // This creates a more gradual and natural wave-like effect
+        let stretchFactor = 1.0;
+        
+        if (influence > 0) {
+            // Apply a smoother stretching curve
+            // Square root function creates a more gradual initial rise
+            stretchFactor = 1.0 + (config.maxStretchFactor - 1.0) * Math.sqrt(influence);
+        }
+        
+        // Apply stretch factor to tip height (y-coordinate)
+        const stretchedHeight = pyramid.userData.originalHeight * stretchFactor;
+        
         // Update the tip position (5th vertex, index 4, xyz coordinates)
         const tipIndex = pyramid.userData.tipIndex * 3; // Multiply by 3 for x,y,z components
         positions[tipIndex] = baseX + tipOffsetX;
-        positions[tipIndex + 1] = pyramid.userData.originalTipY;
+        positions[tipIndex + 1] = stretchedHeight; // Apply the stretched height
         positions[tipIndex + 2] = baseZ + tipOffsetZ;
         
         // Mark the positions attribute as needing update
@@ -230,13 +343,8 @@ function update() {
         // Update geometry attributes
         pyramid.geometry.computeVertexNormals();
         
-        // Update material color based on distance
-        const baseColor = new THREE.Color(config.modelColor);
-        const highlightColor = new THREE.Color(config.highlightColor);
-        const color = baseColor.clone().lerp(highlightColor, influence);
-        
-        // Apply color
-        pyramid.material.color.copy(color);
+        // No color change based on mouse position - just use the current base color
+        pyramid.material.color.set(pyramid.userData.originalColor || currentBaseColor);
     });
 }
 
@@ -280,4 +388,5 @@ if (document.readyState === 'loading') {
     // DOM already loaded, run init directly
     init();
 }
+
 animate();

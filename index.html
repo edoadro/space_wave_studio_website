@@ -4,11 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Wave Studio</title>
+    <!-- Adding Adobe Fonts for Axiforma -->
+    <link rel="stylesheet" href="https://use.typekit.net/your-project-id.css">
+    <!-- Adding Google Fonts alternatives (similar to Axiforma) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
         body {
             margin: 0;
             overflow: hidden;
+            font-family: 'Axiforma', 'Montserrat', 'Nunito', sans-serif;
         }
 
         .header {
@@ -28,8 +35,9 @@
             transform: translate(-50%, -50%);
             color: black;
             font-size: 2.5rem;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            font-weight: 300; /* Changed from 600 to 300 for a thinner look */
+            letter-spacing: 0.03em;
+            /* Removed text-shadow to eliminate glow effect */
             transition: transform 0.3s ease, font-size 0.3s ease;
             z-index: 2;
             cursor: pointer;
@@ -48,7 +56,7 @@
         <h1>Space Wave Studio</h1>
     </header>
     
-    <div class="gallery-text">
+    <div class="gallery-text" onclick="window.location.href='gallery.html'">
         Gallery
     </div>
 

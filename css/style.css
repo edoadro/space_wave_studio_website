@@ -6,7 +6,8 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Axiforma', 'Montserrat', 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-weight: 300; /* Making the base font thinner */
     overflow: hidden;
     background-color: #000;
     color: #fff;
@@ -91,13 +92,15 @@ canvas {
 
 h1 {
     font-size: 3rem;
+    font-weight: 300; /* Changed from 600 to 300 for a thinner look */
+    letter-spacing: 0.02em;
     margin-bottom: 1rem;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    /* Removed text-shadow to eliminate glow effect */
 }
 
 p {
     font-size: 1.2rem;
+    font-weight: 300; /* Changed from 400 to 300 for consistency */
     max-width: 600px;
     margin: 0 auto;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
